@@ -16,20 +16,22 @@ null_values_df1 = df1.isnull().sum()
 
 
 #Fill the null values 
-df1.fillna("NaN", inplace=True)
+df1[df1['risk']==0]['habit'].fillna(df1[df1['risk']==0]['habit'].mode(), inplace=True)
+df1[df1['risk']==1]['habit'].fillna(df1[df1['risk']==1]['habit'].mode(), inplace=True)
 #Convert datetime values
-df1['start_time'] = pd.to_datetime(df1['start_time'], errors='coerce')
-df1['rat_period_start'] = pd.to_datetime(df1['rat_period_start'], errors='coerce')
-df1['start_time'] = pd.to_datetime(df1['start_time'], errors='coerce')
-df1['rat_period_end'] = pd.to_datetime(df1['rat_period_end'], errors='coerce')
-df1['sunset_time'] = pd.to_datetime(df1['sunset_time'], errors='coerce')
+df1['start_time'] = pd.to_datetime(df1['start_time'], errors='coerce', dayfirst=True)
+df1['rat_period_start'] = pd.to_datetime(df1['rat_period_start'], errors='coerce', dayfirst=True)
+df1['start_time'] = pd.to_datetime(df1['start_time'], errors='coerce', dayfirst=True)
+df1['rat_period_end'] = pd.to_datetime(df1['rat_period_end'], errors='coerce', dayfirst=True)
+df1['sunset_time'] = pd.to_datetime(df1['sunset_time'], errors='coerce', dayfirst=True)
 
-df2["time"] = pd.to_datetime(df2["time"], errors='coerce')
+df2["time"] = pd.to_datetime(df2["time"], errors='coerce', dayfirst=True)
 
 mask = df1['habit'].astype(str).str.contains('fight', case=False, na=False)
 
 #Cleaning habit data
 df1.loc[mask, 'habit'] = 'fight'   # in-place overwrite of the column where matched
+
 
 unique = df1['habit'].unique()
 
@@ -40,7 +42,8 @@ unique = df1['habit'].unique()
 df1["rat_time"] = df1['rat_period_end'] - df1['rat_period_start']
 #Convert the time into seconds
 df1['rat_time'] = df1['rat_time'].dt.total_seconds()
-
+#Check whether the bat start approach food after rat left
+df1['bat_after_rat'] = df1['rat_time'] - df1['seconds_after_rat_arrival'] < 0 
 
 
 #---------------Risk vs No-risk Taking Behaviour, Reward vs No-Reward for each of the behaviour
@@ -126,13 +129,16 @@ def plot_second_after_rat_arrival(df1):
 
     print(mean1,mean2)
 def demonstrate(df2):
-    print(df1['rat_time'])
+    print(df1[df1['risk'] == 0]['habit'].mode())
+    print(df1[df1['risk'] == 0]['habit'].isnull().sum())
 #Compare behaviour between and after sunset
 
 # print(np.min(df1['hours_after_sunset']), np.max(df1['hours_after_sunset']))
 # for i in range(0,13):
 #     mean2 = df1[df1['hours_after_sunset'] >= i]['risk'].mean()
 #     print(mean2)
+    # print(df1.isnull().sum())
+    # print(df1['habit'].unique())
 
 
 #--------------------- Mean bat landing time during risk-taking behavior vs not risk-taking behaviour
@@ -152,7 +158,9 @@ def plot_bat_landing_time_risk(df1):
     print(mean1,mean2)
 
 def exploratory_analysis(df1, df2):
-    sns.pairplot(df1)
+    df1_features = ['bat_landing_to_food','rat_time','seconds_after_rat_arrival','risk','reward','sunset_time','hours_after_sunset']
+
+    sns.pairplot(df1[df1_features])
     sns.pairplot(df2)
     plt.show()
 
