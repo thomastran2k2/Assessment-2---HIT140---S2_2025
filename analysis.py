@@ -12,8 +12,8 @@ df2 = pd.read_csv("dataset2.csv")
 #Data Cleaning
 
 #Determine where the null values come from
-null_values_df1 = df1.isnull().sum()
-
+nvl = null_values_df1 = df1.isnull().sum()
+print(nvl)
 
 #Fill the null values 
 df1[df1['risk']==0]['habit'].fillna(df1[df1['risk']==0]['habit'].mode(), inplace=True)
@@ -129,8 +129,7 @@ def plot_second_after_rat_arrival(df1):
 
     print(mean1,mean2)
 def demonstrate(df2):
-    print(df1[df1['risk'] == 0]['habit'].mode())
-    print(df1[df1['risk'] == 0]['habit'].isnull().sum())
+    df1['habit'].astype('numeric', errors='coerce')
 #Compare behaviour between and after sunset
 
 # print(np.min(df1['hours_after_sunset']), np.max(df1['hours_after_sunset']))
