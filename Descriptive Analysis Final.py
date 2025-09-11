@@ -92,7 +92,7 @@ def rat_vs_bat_number(df2):
     df2_no_rat_mean = df2[df2['rat_arrival_number'] == 0]['bat_landing_number'].mean()
     df2_rat_std = df2[df2['rat_arrival_number'] != 0]['bat_landing_number'].std()
     df2_no_rat_std = df2[df2['rat_arrival_number'] == 0]['bat_landing_number'].std()
-
+    print(f"Mean Bat Landings (Rat Present): {df2_rat_mean:.2f}, (No Rat Present): {df2_no_rat_mean:.2f}, Stdev (Rat Present): {df2_rat_std:.2f}, (No Rat Present): {df2_no_rat_std:.2f}")
     #Plot
     plt.figure(figsize=(8,6))
     plt.bar(['Rat Present', 'No Rat Present'], [df2_rat_mean, df2_no_rat_mean])
@@ -163,7 +163,7 @@ def plot_bat_landing_time_risk(df1):
     #Adding standard deviation bar
     plt.errorbar(['Risk-Taking', 'No Risk-Taking'], [mean1, mean2], yerr=[stdev1, stdev2], fmt='o', color='black', capsize=5)
     #Adding text labels on top of bars
-
+    print(f"Mean Bat Landing Time (Risk-Taking): {mean1:.2f}, (No Risk-Taking): {mean2:.2f}, Stdev (Risk-Taking): {stdev1:.2f}, (No Risk-Taking): {stdev2:.2f}")
     for i, v in enumerate([mean1, mean2]):
         plt.text(i, v, f'{v:.1f}', ha='center', va='bottom')
     plt.show()
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     # plot_risk_behaviour(df1)
     # plot_bat_landing_time_risk(df1)
 
-    rat_vs_bat_number(df2) 
-    # multiple_plot(df1, df2)
+    # rat_vs_bat_number(df2) 
+    multiple_plot(df1, df2)
     # exploratory_analysis(df1, df2)
 
