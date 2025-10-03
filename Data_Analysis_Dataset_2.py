@@ -35,6 +35,8 @@ def clean_dataset2(show_raw_dataset2=True):
 
     # Convert datatype of time related columns to datetime
     Dataset_2["time"] = pd.to_datetime(Dataset_2["time"], errors="coerce", dayfirst=True)
+    Dataset_2["season_num"] = Dataset_2['season'].map({'winter': 1, 'summer': 0})
+    Dataset_2['season'] = Dataset_2["month"].apply(lambda x: 'winter' if x in [1, 2, 11, 12] else 'summer')
             
     # Check the condition of negative values in hours_after_sunset column
     negative_hours_after_sunset = Dataset_2[Dataset_2["hours_after_sunset"] < 0]
@@ -45,8 +47,10 @@ def clean_dataset2(show_raw_dataset2=True):
     Dataset_2.loc[Dataset_2["hours_after_sunset"] < 0, "hours_after_sunset"] = 0
 
     # Save the cleaned DataFrame to a new variable
-    Dataset_2_cleaned = Dataset_2.copy() 
+    Dataset_2_cleaned = Dataset_2.copy() \
+
     
+
     if show_raw_dataset2:
         # Final check of datatypes
         print("\nFinal datatypes after cleaning:")

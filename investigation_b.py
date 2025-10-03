@@ -13,8 +13,8 @@ df1 = clean_dataset_1(show_raw_dataset1=False)
 
 print(df["season"].unique())
 df['season'] = df['season'].map({0: 'winter', 1: 'summer'})
-df1['season'] = df1["month"].apply(lambda x: 'winter' if x in [1, 2, 11, 12] else 'summer')
-df2['season'] = df2["month"].apply(lambda x: 'winter' if x in [1, 2, 11, 12] else 'summer')
+
+
 
 def landing_counts(season):
     winter_landing = df[df['season'] == 'winter']
@@ -125,6 +125,56 @@ def season_exploratory2():
     plt.suptitle('Scatter Plot Matrix by Season', y=1.02)
     plt.show()
 
+def descriptive_investigationB(df1, df2):
+    # ----------------- Dataset 1 summaries -----------------
+    print("=== Dataset 1 (Bat landings & behaviour) ===")
+    print(df1.groupby("season")["risk"].mean().rename("Risk-taking rate"))
+    print(df1.groupby("season")["reward"].mean().rename("Reward rate"))
+    print(df1.groupby("season")["seconds_after_rat_arrival"].mean().rename("Mean seconds after rat arrival"))
+    print(df1.groupby("season")["bat_landing_to_food"].mean().rename("Mean landing-to-food time (sec)"))
+    
+    # Risk-taking proportions per season
+    risk_counts = pd.crosstab(df1["season"], df1["risk"], normalize="index")
+    reward_counts = pd.crosstab(df1["season"], df1["reward"], normalize="index")
+    print("\nRisk-taking proportions by season:\n", risk_counts)
+    print("\nReward proportions by season:\n", reward_counts)
+    
+    # ----------------- Dataset 2 summaries -----------------
+    print("\n=== Dataset 2 (Rat arrivals & observation periods) ===")
+    print(df2.groupby("season")["rat_arrival_number"].mean().rename("Mean rat arrivals"))
+    print(df2.groupby("season")["bat_landing_number"].mean().rename("Mean bat landings"))
+    print(df2.groupby("season")["rat_minutes"].mean().rename("Mean rat minutes on platform"))
+    print(df2.groupby("season")["food_availability"].mean().rename("Mean food availability"))
+    
+    # ----------------- Visualisations -----------------
+    # Bat landings by season
+    plt.figure(figsize=(7,5))
+    sns.boxplot(x="season", y="bat_landing_number", data=df2)
+    plt.title("Bat landings per 30-min (by season)")
+    plt.tight_layout()
+    plt.show()
+
+    # Rat arrivals by season
+    plt.figure(figsize=(7,5))
+    sns.boxplot(x="season", y="rat_arrival_number", data=df2)
+    plt.title("Rat arrivals per 30-min (by season)")
+    plt.tight_layout()
+    plt.show()
+
+    # Risk-taking by season
+    plt.figure(figsize=(7,5))
+    sns.barplot(x="season", y="risk", data=df1, estimator="mean")
+    plt.title("Risk-taking rate by season")
+    plt.tight_layout()
+    plt.show()
+
+    # Rewarding behaviour by season
+    plt.figure(figsize=(7,5))
+    sns.barplot(x="season", y="reward", data=df1, estimator="mean")
+    plt.title("Rewarding behaviour rate by season")
+    plt.tight_layout()
+    plt.show()
+
 
 
 
@@ -138,5 +188,6 @@ if __name__ == "__main__":
     # number_of_bats_seasonal()
     
     # data_exploration()
-    season_exploratory2()
+    # season_exploratory2()
+    descriptive_investigationB(df1, df2)
 

@@ -153,9 +153,12 @@ def clean_dataset_1(show_raw_dataset1=True):
 
     # season_map = {0: "Summer", 1: "Winter"}
     # Dataset_1["season"] = Dataset_1["season"].map(season_map)
+    Dataset_1['season_num'] = Dataset_1['season'].map({'winter': 1, 'summer': 0})
+    Dataset_1['season'] = Dataset_1["month"].apply(lambda x: 'winter' if x in [1, 2, 11, 12] else 'summer')
 
 
     
+
     return Dataset_1
 
 
