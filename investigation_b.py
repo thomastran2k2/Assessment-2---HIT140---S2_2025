@@ -11,8 +11,8 @@ df = merge_datasets(clean_dataset_1(), clean_dataset2())
 df2 = clean_dataset2(show_raw_dataset2=False)
 df1 = clean_dataset_1(show_raw_dataset1=False)
 
-print(df["season"].unique())
-df['season'] = df['season'].map({0: 'winter', 1: 'summer'})
+
+# df['season'] = df['season'].map({0: 'winter', 1: 'summer'})
 
 
 
